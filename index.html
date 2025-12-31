@@ -1750,6 +1750,9 @@
                 <h4 class="mb-1 text-lg font-semibold text-dark dark:text-white">
                   Nassa Agesti Rahim
                 </h4>
+                <p class="mb-5 text-sm text-body-color dark:text-dark-6">
+                  Bendahara 1
+                </p>
               </div>
             </div>
           </div>
@@ -1770,6 +1773,9 @@
                 <h4 class="mb-1 text-lg font-semibold text-dark dark:text-white">
                   Zhalianti Almanda
                 </h4>
+                <p class="mb-5 text-sm text-body-color dark:text-dark-6">
+                  Bendahara 2
+                </p>
               </div>
             </div>
           </div>
@@ -8657,6 +8663,11 @@
     <!-- ====== Scripts -->
     <script src="assets/js/swiper-bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/type.js"></script>
+    <script src="assets/js/year.js"></script>
     <script>
       const pageLink = document.querySelectorAll(".ud-menu-scroll");
 
@@ -8723,8 +8734,6 @@
         },
       });
     </script>
-    <script src="assets/js/type.js"></script>
-    <script src="assets/js/year.js"></script>
     <script>
       function filterSelection(category, clickedBtn) {
         var x = document.getElementsByClassName("gallery-item");
@@ -8767,115 +8776,6 @@
             logoText.classList.add('text-white');
           }
         });
-    </script>
-    <script>
-      (function() {
-        const form = document.getElementById('messageForm');
-        const container = document.getElementById('messageContainer');
-        const emptyState = document.getElementById('emptyState');
-        const msgIn = document.getElementById('message');
-        
-        const commentCountEl = document.getElementById('commentCount');
-        const visitorCountEl = document.getElementById('visitorCount');
-
-        const STORAGE_KEY = 'anonVisitorCount_fix'; 
-        const SESSION_KEY = 'has_counted_session';
-
-        let views = localStorage.getItem(STORAGE_KEY);
-        
-        let isSessionCounted = sessionStorage.getItem(SESSION_KEY);
-
-        if (!views) {
-            views = 0;
-        } else {
-            views = parseInt(views);
-        }
-
-        if (!isSessionCounted) {
-            views = views + 1;
-            
-            localStorage.setItem(STORAGE_KEY, views);
-            
-            sessionStorage.setItem(SESSION_KEY, 'true');
-        }
-
-        visitorCountEl.innerText = views.toLocaleString('id-ID');
-
-        const saved = JSON.parse(localStorage.getItem('anonMessages_v12')) || [];
-        
-        updateCommentCount(saved.length);
-
-        if (saved.length > 0) {
-          if(emptyState) emptyState.style.display = 'none';
-          saved.forEach(function(m) { renderRaw(m, false); });
-        }
-
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          const t = msgIn.value.trim();
-          
-          if(t) {
-            const randomNum = Math.floor(Math.random() * 900) + 100; 
-            const autoName = "Anonim" + randomNum;
-
-            const newMsg = {
-              id: Date.now(),
-              sender: autoName, 
-              text: t,
-              color: ['#3B82F6', '#6366F1', '#8B5CF6', '#0EA5E9', '#2563EB'][Math.floor(Math.random()*5)],
-              date: new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})
-            };
-            
-            saved.unshift(newMsg);
-            localStorage.setItem('anonMessages_v12', JSON.stringify(saved));
-            
-            renderRaw(newMsg, true);
-            updateCommentCount(saved.length); 
-            
-            msgIn.value = '';
-            if(emptyState) emptyState.style.display = 'none';
-            container.scrollTop = 0;
-          }
-        });
-
-        function updateCommentCount(total) {
-            commentCountEl.innerText = total;
-        }
-
-        function renderRaw(msg, isNew) {
-          const div = document.createElement('div');
-          
-          let cssClass = "w-full p-5 flex gap-4 border-b border-blue-100 dark:border-blue-900/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors ";
-          if(isNew) { cssClass += "animate-pulse "; }
-          div.className = cssClass;
-
-          const safeS = msg.sender;
-          const safeT = msg.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-          div.innerHTML = 
-            '<div class="shrink-0">' +
-              '<div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md" style="background-color: ' + msg.color + ';">' +
-                safeS.substring(6) + 
-              '</div>' +
-            '</div>' +
-            
-            '<div class="flex-1 min-w-0 w-0">' + 
-              
-              '<div class="flex items-center justify-between mb-1 gap-4">' +
-                '<h4 class="font-bold text-sm text-dark dark:text-white truncate">' + safeS + '</h4>' +
-                '<span class="text-[10px] text-gray-500 dark:text-white font-mono whitespace-nowrap shrink-0">' + msg.date + '</span>' +
-              '</div>' +
-              
-              '<p class="text-sm text-gray-600 dark:text-white leading-relaxed break-words break-all whitespace-pre-wrap">' + safeT + '</p>' +
-            '</div>';
-
-          if(isNew && container.firstChild) {
-            container.insertBefore(div, container.firstChild);
-          } else {
-            container.appendChild(div);
-          }
-        }
-      })();
     </script>
   </body>
 </html>
